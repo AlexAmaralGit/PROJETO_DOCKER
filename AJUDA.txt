@@ -1,0 +1,68 @@
+GIT:
+  - AlexAmaralGit
+  - git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
+  
+BUILD:
+ - EXECUTAR MAVEN INSTALL PARA GERAR - \target\quarkus-app(sera base de copia do DOCKERFILE)
+ - EXECUTAR MAVEN mvnw package -Dquarkus.package.type=uber-jar - Gerar um .jar executavel
+ 
+DOCKERFILE:
+
+EXEMPLO: 
+FROM registry.access.redhat.com/ubi8/openjdk-11:1.11
+COPY --chown=185 target/quarkus-app/lib/ /deployments/lib/
+COPY --chown=185 target/*.jar /deployments/
+COPY --chown=185 target/quarkus-app/app/ /deployments/app/
+COPY --chown=185 target/quarkus-app/quarkus/ /deployments/quarkus/
+RUN ls /deployments/app/
+ENTRYPOINT ["java", "-jar", "/deployments/quarkus-hello-world-maven-1.0.0-SNAPSHOT-runner.jar"] 
+ 
+ Chown é uma abreviação para change owner.
+ 
+ COMMANDOS:
+ - docker build --tag quarkus-dockfile . (GERAR IMAGEM VIA DOCKFILE).
+
+DOCKER-COMPOSE:
+version: '3.9'
+
+
+services:
+  db:
+    image: mysql  
+    cap_add:
+      - SYS_NICE
+    container_name: mysql-container-docker
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - TZ=${TZ}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    network_mode: bridge      
+  
+  quarkus-service:
+    build:
+      context: .              -->DIRETORIO ORIGEM DA BUILD
+      dockerfile: Dockerfile  -->GERA UMA NOVA IMAGEM A PARTIR DE UM DOCKFILEE 
+#    image: quarkus-dockfile  -->EXECUTA UM IMAGEM GERARDA
+    container_name: quarkus-container-docker
+    env_file:
+     - ./.env
+    environment:
+      - QUARKUS_DATASOURCE_JDBC_URL=jdbc:mysql://localhost:${HOST_MACHINE_MYSQL_PORT}/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true&useSSL=false
+      - QUARKUS_DATASOURCE_USERNAME=${MYSQL_USER}
+      - QUARKUS_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
+      - QUARKUS_DATASOURCE_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    mem_limit: 128m
+    ports:
+      - "8080:8080"  # the HTTP endpoint
+    network_mode: bridge
+    depends_on:
+      - db
+      
+  COMMANDO:    
+   - docker-compose up -d
+   - docker-compose down
+   - docker-compose -f docker-compose.yml up         
+ 
