@@ -1,0 +1,102 @@
+version: '3.9'
+
+
+services:
+  db:
+    image: mysql
+#    command: printenv  
+    cap_add:
+      - SYS_NICE
+    container_name: mysql-container-docker
+#    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - TZ=${TZ}
+ #     - MYSQL_USER=${MYSQL_USER}
+ #     - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    network_mode: bridge  
+ #   networks:
+ #     mynetwork: {} 
+#    network_mode: "host"       
+#      - host
+#      - quarkusNet
+    
+      
+  quarkus-service:
+    image: alex/artefato:1.0.0-SNAPSHOT
+    command: printenv
+    env_file:
+     - ./.env
+    environment:
+      - QUARKUS_DATASOURCE_JDBC_URL=jdbc:mysql://localhost:${HOST_MACHINE_MYSQL_PORT}/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true&useSSL=fals
+    container_name: quarkus-container-docker
+    mem_limit: 128m
+    ports:
+      - "8080:8080"  # the HTTP endpoint
+    network_mode: bridge
+    depends_on:
+      - db 
+
+#    networks:
+#      mynetwork: {}
+      
+#networks:
+#  mynetwork:
+#    external: true
+#    name: host      
+      
+ #   networks:
+ #     - host 
+#      - quarkusNet
+            
+#  networks:
+#    host:
+#      name: host
+#      external: true
+
+#networks:
+#  quarkusNet:
+#    driver: host 
+
+              
+#COMANDO DE EXECUCAO --NO LOCAL DO ARQUIVO
+#docker-compose up -d
+#docker network ls      
+#docker inspect proj-db-1   VER DADOS DETALHADOS DA NETWORK    
+#SE NAO INFORMAR NETWORK ELE USA A DEFAULT
+#LINK CONTAINER docker network connect --link proj-db-1 proj_quarkusNet proj-quarkus-service-1
+#NETWORK REDE DE COMUNICAO ENTRE CONTAINER
+#LG DOCKER tubipinho @GMAIL147258
+
+#COMMANDO PARA VER CONFIGURACAO docker-compose -f docker-compose.yml config
+#docker-compose -f docker-compose.yml up - COM LOG
+
+
+
+#Commands:
+#  build       Build or rebuild services
+#  convert     Converts the compose file to platform's canonical format
+#  cp          Copy files/folders between a service container and the local filesystem
+#  create      Creates containers for a service.
+#  down        Stop and remove containers, networks
+#  events      Receive real time events from containers.
+#  exec        Execute a command in a running container.
+#  images      List images used by the created containers
+#  kill        Force stop service containers.
+#  logs        View output from containers
+#  ls          List running compose projects
+#  pause       Pause services
+#  port        Print the public port for a port binding.
+#  ps          List containers
+#  pull        Pull service images
+#  push        Push service images
+#  restart     Restart containers
+#  rm          Removes stopped service containers
+#  run         Run a one-off command on a service.
+#  start       Start services
+#  stop        Stop services
+#  top         Display the running processes
+#  unpause     Unpause services
+#  up          Create and start containers
+#  version     Show the Docker Compose version information
