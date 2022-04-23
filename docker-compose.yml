@@ -20,23 +20,27 @@ services:
  #     mynetwork: {} 
 #    network_mode: "host"       
 #      - host
-#      - quarkusNet
-    
-      
+#      - quarkusNet    
   quarkus-service:
-    image: alex/artefato:1.0.0-SNAPSHOT
-    command: printenv
+    build:
+      context: .
+      dockerfile: Dockerfile
+#    image: quarkus-dockfile
+    container_name: quarkus-container-docker
     env_file:
      - ./.env
     environment:
-      - QUARKUS_DATASOURCE_JDBC_URL=jdbc:mysql://localhost:${HOST_MACHINE_MYSQL_PORT}/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true&useSSL=fals
-    container_name: quarkus-container-docker
+      - QUARKUS_DATASOURCE_JDBC_URL=jdbc:mysql://localhost:${HOST_MACHINE_MYSQL_PORT}/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true&useSSL=false
+      - QUARKUS_DATASOURCE_USERNAME=${MYSQL_USER}
+      - QUARKUS_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
+      - QUARKUS_DATASOURCE_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     mem_limit: 128m
     ports:
       - "8080:8080"  # the HTTP endpoint
     network_mode: bridge
     depends_on:
       - db 
+    command: docker exec quarkus-container-docker env
 
 #    networks:
 #      mynetwork: {}
@@ -61,7 +65,7 @@ services:
 
               
 #COMANDO DE EXECUCAO --NO LOCAL DO ARQUIVO
-#docker-compose up -d
+#docker-compose up -d ---  mvnw package -Dquarkus.package.type=uber-jar
 #docker network ls      
 #docker inspect proj-db-1   VER DADOS DETALHADOS DA NETWORK    
 #SE NAO INFORMAR NETWORK ELE USA A DEFAULT
