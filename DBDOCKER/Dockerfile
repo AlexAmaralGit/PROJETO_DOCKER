@@ -1,4 +1,4 @@
-FROM mysql
+FROM mysql:latest
 ENV MYSQL_ROOT_PASSWORD root
 ENV MYSQL_ROOT_USER root
 
@@ -16,7 +16,7 @@ ENV MYSQL_ROOT_USER root
 #docker exec -it mysql-container /bin/bash
 
 ##Acesso mysql
-#mysql -uroot -pteste
+#mysql -uroot -proot
 
 ##Usar o banco
 #use <Banco>
@@ -33,3 +33,11 @@ ENV MYSQL_ROOT_USER root
 #quarkus.datasource.jdbc.url=jdbc:mysql://localhost:9000/estoque
 #quarkus.datasource.jdbc.max-size=16
 #quarkus.hibernate-orm.log.sql=true
+
+
+#### mysql -uroot -p1ESPACAO
+#create user 'dbdev'@'localhost' identified by 'root';
+#grant all privileges on * . * to 'dbdev'@'localhost';
+#flush privileges;
+
+  
