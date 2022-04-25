@@ -1,9 +1,11 @@
 FROM mysql:latest
+ADD banca.sql /docker-entrypoint-initdb.d
 ENV MYSQL_ROOT_PASSWORD root
 ENV MYSQL_ROOT_USER root
 
+
 ##Gerar imagem
-#docker run -d --rm --name mysql-container mysql-image
+#docker run -d --rm --name mysql-container mysql:latest
 
 ##Gerar container com sqcript
 #docker exec -i mysql-container mysql -uroot -pteste <banca.sql

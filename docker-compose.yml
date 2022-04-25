@@ -3,62 +3,42 @@ version: '3.9'
 
 services:
   db-mysql:
-    image: bancomysql:latest
-#    command: printenv  
+    image: myqlgerandodb:latest
     cap_add:
       - SYS_NICE
     container_name: mysql-container-docker
-#    command: --default-authentication-plugin=mysql_native_password 
     restart: always
-#    environment:
-#      MYSQL_DATABASE: banca
-#       MYSQL_ROOT_USER: root
-#       MYSQL_ROOT_PASSWORD: root 
-#      MYSQL_ROOT_HOST: mysql-container-docker 
-#      MYSQL_HOST: mysql-container-docker 
-#      MYSQL_USER: root
-#      MYSQL_PASSWORD: root 
-#       MYSQL_PORT: 3306
     ports:
-      - "3306:3306"   
-#     - TZ=${TZ}
-#   network_mode: bridge  
-#   networks:
-#     mynetwork: {} 
-#    network_mode: "host"       
-#      - host
-#      - quarkusNet    
+      - "3306:3306"
+    healthcheck:
+      test: mysqlshow -uroot -proot
+      timeout: 2s
+      retries: 3  
+      
+#      test: ["CMD mysql uroot  -p;", "root", "ENTER"," show databases;"] 
+       
   quarkus-service:
     build:
       context: .
       dockerfile: Dockerfile
-#    image: quarkus-dockfile
     container_name: quarkus-container-docker
     env_file:
      - ./.env
     environment:
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://db-mysql:3306/banca
- #     QUARKUS_DATASOURCE_ROOT_USERNAME: root
- #     QUARKUS_DATASOURCE_ROOT_PASSWORD: root
-  #    QUARKUS_DATASOURCE_ROOT_PASSWORD: ""
-  #    MYSQL_ROOT_PASSWORD: root
-  #    MYSQL_ROOT_USER: root
-  #    MYSQL_DATABASE: banca 
-  #    MYSQL_HOST: mysql-container-docker 
-  #    MYSQL_USER: ${MYSQL_USER}
-  #    MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-  #    QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://${HOST_MACHINE_MYPORT}:${HOST_MACHINE_MYSQL_PORT}/${MYSQL_DATABASE}
-  #    - QUARKUS_DATASOURCE_USERNAME=${MYSQL_USER}
-  #    - QUARKUS_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
     mem_limit: 128m
     ports:
       - "8080:8080"  # the HTTP endpoint
-  #  network_mode: bridge
     depends_on:
-      - db-mysql 
+      db-mysql:
+          condition: service_healthy
+#         condition: service_completed_successfully 
+      
+      
 #    networks:
 #      mynetwork: {}
       
+  #  network_mode: bridge
 #networks:
 #  mynetwork:
 #    external: true
@@ -78,6 +58,40 @@ services:
 #    driver: host 
 
               
+      
+      
+#     - TZ=${TZ}
+#   network_mode: bridge  
+#   networks:
+#     mynetwork: {} 
+#    network_mode: "host"       
+#      - host
+#      - quarkusNet    
+#    image: quarkus-dockfile
+#    environment:
+#      MYSQL_DATABASE: banca
+#       MYSQL_ROOT_USER: root
+#       MYSQL_ROOT_PASSWORD: root 
+#      MYSQL_ROOT_HOST: mysql-container-docker 
+#      MYSQL_HOST: mysql-container-docker 
+#      MYSQL_USER: root
+#      MYSQL_PASSWORD: root 
+#       MYSQL_PORT: 3306
+      
+#    command: --default-authentication-plugin=mysql_native_password 
+#    command: printenv  
+ #     QUARKUS_DATASOURCE_ROOT_USERNAME: root
+ #     QUARKUS_DATASOURCE_ROOT_PASSWORD: root
+  #    QUARKUS_DATASOURCE_ROOT_PASSWORD: ""
+  #    MYSQL_ROOT_PASSWORD: root
+  #    MYSQL_ROOT_USER: root
+  #    MYSQL_DATABASE: banca 
+  #    MYSQL_HOST: mysql-container-docker 
+  #    MYSQL_USER: ${MYSQL_USER}
+  #    MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  #    QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://${HOST_MACHINE_MYPORT}:${HOST_MACHINE_MYSQL_PORT}/${MYSQL_DATABASE}
+  #    - QUARKUS_DATASOURCE_USERNAME=${MYSQL_USER}
+  #    - QUARKUS_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
 #COMANDO DE EXECUCAO --NO LOCAL DO ARQUIVO
 #docker container inspect quarkus-container-docker
 #docker-compose up -d ---  mvnw package -Dquarkus.package.type=uber-jar

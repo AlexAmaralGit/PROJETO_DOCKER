@@ -64,5 +64,15 @@ services:
   COMMANDO:    
    - docker-compose up -d
    - docker-compose down
-   - docker-compose -f docker-compose.yml up         
+   - docker-compose -f docker-compose.yml up  
+   
+   DICAS :
+    - O BANCO DEMORA A STARTE E DA ERRO DE CONXECAO REFUSED! 
+    - NO COMPOSE COLOCAR ":" AO INVES DE "=" NAS PROPRIEDADES
+    - no do JDBC colocar nome do container do BANCO DE DADOS
+    - IMAGEM do quarkus copia os arquivos do quarkus-app da pasta target gerado no maven install
+    - usar mvnw install -Dquarkus.package.type=uber-jar para gerar o RUNNER.jar
+    
+    
+            
  

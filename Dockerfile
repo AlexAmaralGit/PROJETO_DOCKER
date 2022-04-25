@@ -5,6 +5,10 @@ COPY --chown=185 target/quarkus-app/app/ /deployments/app/
 COPY --chown=185 target/quarkus-app/quarkus/ /deployments/quarkus/
 RUN ls /deployments/app/
 ENTRYPOINT ["java", "-jar", "/deployments/quarkus-hello-world-maven-1.0.0-SNAPSHOT-runner.jar"]
+
+#ECHO = DISPLAY CMD ["echo", "helloworld"]
+#ENTRYPOINT - COMANDO FIXO 
+#CMD        - COMANDO VARIAVEL  
 #
 #
 #FROM maven:3.8.5-openjdk-11-slim
