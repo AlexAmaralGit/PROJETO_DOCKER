@@ -74,5 +74,6 @@ services:
     - usar mvnw install -Dquarkus.package.type=uber-jar para gerar o RUNNER.jar
     
     
-            
+ MAVEN:
+ 	- SKIPTESTE = -Dmaven.test.skip=true           
  

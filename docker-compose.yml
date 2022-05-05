@@ -11,7 +11,7 @@ services:
     ports:
       - "3306:3306"
     healthcheck:
-      test: mysqlshow -uroot -proot
+      test: mysqlshow -u${MYSQL_USER} -p${MYSQL_PASSWORD}
       timeout: 2s
       retries: 3  
       
@@ -25,7 +25,7 @@ services:
     env_file:
      - ./.env
     environment:
-      QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://db-mysql:3306/banca
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://db-mysql:3306/${MYSQL_DATABASE}
     mem_limit: 128m
     ports:
       - "8080:8080"  # the HTTP endpoint
