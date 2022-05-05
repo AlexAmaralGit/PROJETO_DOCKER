@@ -1,0 +1,9 @@
+HOST_MACHINE_MYSQL_PORT=3306
+HOST_MACHINE_MYPORT=3306
+MYSQL_ROOT_PASSWORD=root
+MYSQL_USER=root
+MYSQL_PASSWORD=root
+MYSQL_DATABASE=banca
+MYSQL_DB_KIND=mysql
+MYSQL_DB_CONNECT=jdbc:mysql://localhost:4444/banca?allowPublicKeyRetrieval=true&useSSL=false
+TZ=America/Sao_Paulo
